@@ -20,22 +20,27 @@ class snakeGame {
    field int direction; // the square's current direction: 
                         // 0=none, 1=up, 2=down, 3=left, 4=right
    field int speed; 
+   field int size; 
+   field int memAddress; 
 
 
    /** Constructs a new Square Game. */
    constructor snakeGame new() {
       var snakeNode mid;
-      // Creates a 30 by 30 pixels square and positions it at the top-left
-      // of the screen.
-      let head = snakeNode.new(100, 100);
-      let mid = snakeNode.new(110, 100);
-      let tail = snakeNode.new(120, 100);
+      let size = 20;
+
+
+      let head = snakeNode.new(100, 100,size);
+      let mid = snakeNode.new(120, 100, size);
+      let tail = snakeNode.new(140, 100, size);
       do head.setNext(mid);
       do mid.setNext(tail);
       do tail.setPrev(mid);
       do mid.setPrev(head);
+
+      do apple(0);
       let direction = 4;  // initial state is no movement
-      let speed = 20;
+      let speed = 50;
       return this;
    }
 
@@ -52,25 +57,26 @@ class snakeGame {
       var snakeNode oldTail;
 
       if (direction = 1) { 
-         let newHead = snakeNode.new(head.getX(), head.getY()-10);
+         let newHead = snakeNode.new(head.getX(), head.getY()-size,size);
          }
       if (direction = 2) { 
-         let newHead = snakeNode.new(head.getX(), head.getY()+10) ;
+         let newHead = snakeNode.new(head.getX(), head.getY()+size, size) ;
          }
       if (direction = 3) {    
-         let newHead = snakeNode.new(head.getX()-10, head.getY()) ;
+         let newHead = snakeNode.new(head.getX()-size, head.getY(), size) ;
          }
       if (direction = 4) { 
-         let newHead = snakeNode.new(head.getX()+10, head.getY());
+         let newHead = snakeNode.new(head.getX()+size, head.getY(), size);
          }
       do newHead.setNext(head);
+      do head.setPrev(newHead);
       let head = newHead;
-      do tail.draw();
-
-      do Sys.wait(speed);  // delays the next movement
       let oldTail = tail;
       let tail = oldTail.getPrev();
       do oldTail.dispose();
+
+      do Sys.wait(speed);  // delays the next movement
+     
       return;
    }
 
@@ -102,6 +108,29 @@ class snakeGame {
      } // while
      return;
    }
+
+
+   method void apple(int location) {
+      let memAddress = 16384+location;
+      do Memory.poke(memAddress+0, 3072);
+      do Memory.poke(memAddress+32, 1536);
+      do Memory.poke(memAddress+64, 768);
+      do Memory.poke(memAddress+96, 256);
+      do Memory.poke(memAddress+128, 16380);
+      do Memory.poke(memAddress+160, 32766);
+      do Memory.poke(memAddress+192, -1);
+      do Memory.poke(memAddress+224, -1);
+      do Memory.poke(memAddress+256, -1);
+      do Memory.poke(memAddress+288, -1);
+      do Memory.poke(memAddress+320, -1);
+      do Memory.poke(memAddress+352, -1);
+      do Memory.poke(memAddress+384, -1);
+      do Memory.poke(memAddress+416, -1);
+      do Memory.poke(memAddress+448, 32766);
+      do Memory.poke(memAddress+480, 16380);
+   return;
+}
+
 }
 
 

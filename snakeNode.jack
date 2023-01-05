@@ -12,10 +12,10 @@ class snakeNode {
    field int size;
 
    /** Constructs a new square with a given location and size. */
-   constructor snakeNode new(int Ax, int Ay) {
+   constructor snakeNode new(int Ax, int Ay, int Asize) {
       let x = Ax;
       let y = Ay;
-      let size = 10;
+      let size = Asize;
       let next = this;
       let prev =this;
       do draw();
