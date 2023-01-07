@@ -30,16 +30,12 @@ class snakeGame {
 
    /** Constructs a new Square Game. */
    constructor snakeGame new() {
-      var snakeNode mid;
 
       let size = 20;
       let head = snakeNode.new(100, 100,size);
-      let mid = snakeNode.new(120, 100, size);
       let tail = snakeNode.new(140, 100, size);
-      do head.setNext(mid);
-      do mid.setNext(tail);
-      do tail.setPrev(mid);
-      do mid.setPrev(head);
+      do head.setNext(tail);
+      do tail.setPrev(head);
       
       let currentAppleLoc = 0;
       do appleArrayReset();
