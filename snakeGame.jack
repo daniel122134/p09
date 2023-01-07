@@ -1,18 +1,3 @@
-// This file is part of www.nand2tetris.org
-// and the book "The Elements of Computing Systems"
-// by Nisan and Schocken, MIT Press.
-// File name: projects/09/Square/SquareGame.jack
-
-/**
- * Implements the Square Dance game.
- * This simple game allows the user to move a black square around
- * the Screen, and change the square's size during the movement.
- * When the game starts, a square of 30 by 30 pixels is shown at the
- * top-left corner of the Screen. The user controls the square as follows.
- * The 4 arrow keys are used to move the square up, down, left, and right.
- * The 'z' and 'x' keys are used, respectively, to decrement and increment
- * the square's size. The 'q' key is used to quit the game.
- */
 
 class snakeGame {
    field snakeNode head; // the square of this game
@@ -26,6 +11,8 @@ class snakeGame {
    field Array appleLocationX;
    field Array appleLocationY;
    field int currentAppleLoc;
+   field boolean exit;
+
 
 
    /** Constructs a new Square Game. */
@@ -51,23 +38,21 @@ class snakeGame {
       let appleLocationX = Array.new(5);
       let appleLocationY = Array.new(5);
 
-      let appleLocationX[0] = 300;
-      let appleLocationX[1] = 200;
-      let appleLocationX[2] = 100;
-      let appleLocationX[3] = 50;
-      let appleLocationX[4] = 400;
+      let appleLocationX[0] = 10;
+      let appleLocationX[1] = 210;
+      let appleLocationX[2] = 110;
+      let appleLocationX[3] = 70;
+      let appleLocationX[4] = 210;
 
-      let appleLocationY[0] = 100;
-      let appleLocationY[1] = 50;
-      let appleLocationY[2] = 300;
-      let appleLocationY[3] = 400;
-      let appleLocationY[4] = 200;
+      let appleLocationY[0] = 10;
+      let appleLocationY[1] = 70;
+      let appleLocationY[2] = 110;
+      let appleLocationY[3] = 10;
+      let appleLocationY[4] = 210;
       return;
    }
 
    method void drawApple(){
-      do Screen.setColor(false);
-      do Screen.drawCircle(appleLocationX[currentAppleLoc], appleLocationY[currentAppleLoc], 10);
       if (currentAppleLoc = 4){
          let currentAppleLoc = 0;
       }
@@ -76,7 +61,7 @@ class snakeGame {
       }
       do Screen.setColor(true);
       do Screen.drawCircle(appleLocationX[currentAppleLoc], appleLocationY[currentAppleLoc], 10);
-      return;
+       return;
    }
 
    /** Disposes this game. */
@@ -93,8 +78,9 @@ class snakeGame {
    method void moveSnake() {
       var snakeNode newHead;
       var snakeNode oldTail;
+      var snakeNode temp;
       var int xVal;
-      var int yVaL;
+      var int yVal;
 
       if (duartionCounter = duartion){
          let duartionCounter = 0;
@@ -115,10 +101,24 @@ class snakeGame {
       do newHead.setNext(head);
       do head.setPrev(newHead);
       let head = newHead;
-      // Checking if the snake encountered the apple
+      
+
       let xVal = newHead.getX();
-      let yVaL = newHead.getY();
-      if (~((xVal > appleLocationX[currentAppleLoc] - 20) & (xVal < appleLocationX[currentAppleLoc] + 20) & (yVaL < appleLocationY[currentAppleLoc] + 20) & (yVaL > appleLocationY[currentAppleLoc] - 20))) {
+      let yVal = newHead.getY();
+
+      //check for collision
+      let temp = head.getNext();
+      while (~( (  (temp.getX() = head.getX()) & (temp.getY() = head.getY()) ) | (temp = tail))){
+         let temp = temp.getNext();
+      }
+      if (~(temp=tail)){
+         do gameOver();
+      }
+
+
+
+      // Checking if the snake encountered the apple
+      if (~((xVal = (appleLocationX[currentAppleLoc] - 10)) & (yVal = (appleLocationY[currentAppleLoc] - 10)) )) {
          let oldTail = tail;
          let tail = oldTail.getPrev();
          do oldTail.dispose();
@@ -140,13 +140,12 @@ class snakeGame {
    /** Runs the game: handles the user's inputs and moves the square accordingly */
    method void run() {
       var char key;  // the key currently pressed by the user
-      var boolean exit;
       
       let exit = false;
 
       while (~exit) {
          // waits for a key to be pressed
-         while (key = 0) {
+         while (key = 0 & (~(exit))) {
             let key = Keyboard.keyPressed();
             do moveSnake();
          }
@@ -164,28 +163,15 @@ class snakeGame {
             do moveSnake();
          }
       }
+      do gameOver();
       return;
    }
 
-   method void apple(int location) {
-      let memAddress = 16384+location;
-      do Memory.poke(memAddress+0, 3072);
-      do Memory.poke(memAddress+32, 1536);
-      do Memory.poke(memAddress+64, 768);
-      do Memory.poke(memAddress+96, 256);
-      do Memory.poke(memAddress+128, 16380);
-      do Memory.poke(memAddress+160, 32766);
-      do Memory.poke(memAddress+192, -1);
-      do Memory.poke(memAddress+224, -1);
-      do Memory.poke(memAddress+256, -1);
-      do Memory.poke(memAddress+288, -1);
-      do Memory.poke(memAddress+320, -1);
-      do Memory.poke(memAddress+352, -1);
-      do Memory.poke(memAddress+384, -1);
-      do Memory.poke(memAddress+416, -1);
-      do Memory.poke(memAddress+448, 32766);
-      do Memory.poke(memAddress+480, 16380);
-   return;
+   method void gameOver() {
+      do Output.moveCursor(11,28);
+      do Output.printString("GAME OVER");
+      let exit = true;
+      return;
    }
 }
 

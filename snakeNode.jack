@@ -63,15 +63,14 @@ class snakeNode {
    /** Draws the square on the screen. */
    method void draw() {
       do Screen.setColor(true);
-      if (x < 0){let x = 510 +x;}
-      if (y < 0){let y = 254 +y;}
-      if (x > 510){let x = x-510;}
-      if (y > 254){let y =  y-254;}
+      if (x < 0){let x = 460 ;}
+      if (y < 0){let y = 220;}
+      if (x = 480){let x = 0;}
+      if (y = 240){let y =  0;}
       
-      if (y+size < 254){
-         if (x+size < 510){
+      if (y < 240){
+         if (x < 480){
                do Screen.drawRectangle(x, y, x + size, y + size);
-
          }
       }
       return;
@@ -80,8 +79,8 @@ class snakeNode {
    /** Erases the square from the screen. */
    method void erase() {
       do Screen.setColor(false);
-      if (y+size < 254){
-         if (x+size < 510){
+      if (y < 240){
+         if (x < 480){
             do Screen.drawRectangle(x, y, x + size, y + size);
 
          }
@@ -89,78 +88,9 @@ class snakeNode {
       return;
    }
 
-    /** Increments the square size by 2 pixels. */
-   method void incSize() {
-      if (((y + size) < 254) & ((x + size) < 510)) {
-         do erase();
-         let size = size + 2;
-         do draw();
-      }
-      return;
-   }
-
-   /** Decrements the square size by 2 pixels. */
-   method void decSize() {
-      if (size > 2) {
-         do erase();
-         let size = size - 2;
-         do draw();
-      }
-      return;
-   }
+ 
 
 
 
 
-   /** DELETE THIER CODE AT THE A+END IF UNUSED */
-
-
-
-   /** Moves the square up by 2 pixels. */
-   method void moveUp() {
-      if (y > 1) {
-         do Screen.setColor(false);
-         do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
-         let y = y - 2;
-         do Screen.setColor(true);
-         do Screen.drawRectangle(x, y, x + size, y + 1);
-      }
-      return;
-   }
-
-   /** Moves the square down by 2 pixels. */
-   method void moveDown() {
-      if ((y + size) < 254) {
-         do Screen.setColor(false);
-         do Screen.drawRectangle(x, y, x + size, y + 1);
-         let y = y + 2;
-         do Screen.setColor(true);
-         do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
-      }
-      return;
-   }
-
-   /** Moves the square left by 2 pixels. */
-   method void moveLeft() {
-      if (x > 1) {
-         do Screen.setColor(false);
-         do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
-         let x = x - 2;
-         do Screen.setColor(true);
-         do Screen.drawRectangle(x, y, x + 1, y + size);
-      }
-      return;
-   }
-
-   /** Moves the square right by 2 pixels. */
-   method void moveRight() {
-      if ((x + size) < 510) {
-         do Screen.setColor(false);
-         do Screen.drawRectangle(x, y, x + 1, y + size);
-         let x = x + 2;
-         do Screen.setColor(true);
-         do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
-      }
-      return;
-   }
 }
